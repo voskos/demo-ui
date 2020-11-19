@@ -9,11 +9,11 @@ import {connect, NatsConnectionOptions, Payload} from 'ts-nats';
 // peer connection
 var pc = null;
 var connection = null;
-var flag = 1
 
 function App() {
   const [v, sV] = useState([])
   const [u_id, setUid] = useState("")
+  const [f, SetF] = useState(0)
 
   function createPeerConnection() {
     var config = {
@@ -51,7 +51,14 @@ function App() {
           // let t = v
           // t.push(video)
           // sV(t)
-          document.getElementById('video').srcObject = new MediaStream([transceiver.receiver.track]);
+          if(localStorage.uid !== "C"){
+            document.getElementById('video').srcObject = new MediaStream([transceiver.receiver.track]);
+          }
+          else{
+            console.log("2ND VIDEO FRAMEEEEEEEEEEE")
+            document.getElementById('video1').srcObject = new MediaStream([transceiver.receiver.track]);
+          }
+          
           // if(flag == 1){
           //   flag = 2
           //   document.getElementById('video').srcObject = new MediaStream([transceiver.receiver.track]);
@@ -102,7 +109,7 @@ function negotiate() {
 
 function startCall(){
   pc = createPeerConnection();
-
+  localStorage.uid = $("#uname").val()
   // const t0 = pc.addTransceiver("video",{direction : 'sendrecv'} )
   // video_sender = t0.sender;
   // video_rcvr = t0.receiver;
@@ -139,7 +146,7 @@ function startCall(){
 } 
 
 useEffect(() => {    
-
+  localStorage.flag = 1
   if (window["WebSocket"]) {
   connection = new WebSocket('ws://localhost:8080/ws');
  
@@ -182,8 +189,8 @@ useEffect(() => {
      <div id = "callPage"> 
 
         <audio id="audio" autoPlay={true}></audio>
-        <video id="video" autoPlay={true}></video>
-        <video id="video1" autoPlay={true}></video>
+        <video id="video" autoPlay={true} width="1000px"></video>
+        <video id="video1" autoPlay={true} width="1000px"></video>
         <div> 
            <div> 
               <input id = "uname" type = "text" placeholder = "username to call" /> 
